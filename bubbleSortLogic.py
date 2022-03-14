@@ -2,17 +2,15 @@
 
 class bubbleSortLogic():
     def __init__(self, inputList) -> None:
-        self.indexToValueDict = {}
+        self.indexToValueLookup = inputList
         self.listLen = len(inputList)
-        for i in range(len(inputList)):
-            self.indexToValueDict[i] = inputList[i]
         self.indexList = [x for x in range(len(inputList))]
         self.outerForLoop = 0
         self.innerForLoop = 0
 
 
     def getValue(self, index: int) -> int:
-        return self.indexToValueDict[index]
+        return self.indexToValueLookup[index]
 
 
     def getNext(self):

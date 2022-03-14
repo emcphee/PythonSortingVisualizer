@@ -1,14 +1,15 @@
-from sqlite3 import InternalError
 import bubbleSortLogic as bubble
+import mergeSortLogic as merge
 import pConstants
 class sortingLogicIterator():
     def __init__(self, inputList, sortingAlgo) -> None:
         self.indexList = [x for x in range(len(inputList))]
-        if sortingAlgo == "bubbleSort":
+
+        if sortingAlgo == pConstants.BUBBLE:
             self.algoSpecificIterator = bubble.bubbleSortLogic(inputList)
         # put rest of algos in elifs here
-        elif False:
-            pass
+        elif sortingAlgo == pConstants.MERGE:
+            self.algoSpecificIterator = merge.mergeSortLogic(inputList)
         else:
             raise ValueError # Not a valid sorting algorithm
 
@@ -18,10 +19,3 @@ class sortingLogicIterator():
     
     def getNext(self):
         return self.algoSpecificIterator.getNext()
-
-def indexesToSwap(startList,EndList):
-    swaps = []
-    for x in range(len(startList)):
-        if startList[x] != EndList[x]:
-            swaps.append(x)
-    return (swaps[0],swaps[1])
