@@ -3,6 +3,7 @@ import mergeSortLogic as merge
 import pConstants
 class sortingLogicIterator():
     def __init__(self, inputList, sortingAlgo) -> None:
+        self.swapCount = 0
         self.indexList = [x for x in range(len(inputList))]
 
         if sortingAlgo == pConstants.BUBBLE:
@@ -18,4 +19,6 @@ class sortingLogicIterator():
         return self.algoSpecificIterator.getValue(index)
     
     def getNext(self):
-        return self.algoSpecificIterator.getNext()
+        ret = self.algoSpecificIterator.getNext()
+        self.swapCount += 1
+        return ret

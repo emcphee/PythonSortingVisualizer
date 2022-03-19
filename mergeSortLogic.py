@@ -1,4 +1,4 @@
-
+import copy
 
 class subList():
     def __init__(self, splitLevel, indexRange) -> None:
@@ -219,9 +219,20 @@ class mergeSortLogic():
         if self.mergeCache == None:
             self.createNextMergeCache()
 
+
+
+        prevIndexList = copy.copy(self.indexList)
         # merge cache is guaranteed to exist so
         # it is called for the next placement
         self.indexList = self.mergeCache.mergeOne()
+
+        indexesChanged = [x for x in range(len(prevIndexList)) if prevIndexList[x] != self.indexList[x]]
+        if len(indexesChanged) > 0:
+            indexChanged = indexesChanged[0]
+            prevValue = prevIndexList[indexChanged]
+            newValue = self.indexList[indexChanged]
+            newValinPrev = prevIndexList.index(newValue)
+            self.indexList[newValinPrev] = prevValue
 
         # if the mergeCache is out of things to place,
         # it is pushed to the mergeStack as a subList and deleted from the instance variable mergeCache

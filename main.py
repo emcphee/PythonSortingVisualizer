@@ -1,17 +1,14 @@
-"""
-Base idea:
-user opens up app, it asks which sorting algorithm to use,
-then user can either give an input list up to 100 integers, or
-random list can be generated for them.
-
-so sortingLogic will get an input list to sort, and the algorithm to use.
-"""
-
+from tkinter.tix import TEXT
 import sortingLogicWrapper
 import graphics
 import pConstants
 import pygame
 import random
+import copy
+
+
+pygame.init()
+
 
 WIN = pygame.display.set_mode((pConstants.WIDTH,pConstants.HEIGHT))
 pygame.display.set_caption("Sorting Visualizer")
@@ -27,6 +24,9 @@ sortIterator = sortingLogicWrapper.sortingLogicIterator(inputList, pConstants.AL
 singleSwapTimer, t = pygame.USEREVENT+1, pConstants.TIMEBETWEENSWAPS
 pygame.time.set_timer(singleSwapTimer, t)
 
+# initializes font
+myfont = pygame.font.SysFont('Arial', 24)
+TEXT_COLOR = (0,0,255)
 def mainLoop():
     sortingComplete = False
     clock = pygame.time.Clock()
@@ -40,7 +40,6 @@ def mainLoop():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
-
             
             if event.type == singleSwapTimer and not sortingComplete:
                 sortIterator.indexList = sortIterator.getNext()
@@ -48,8 +47,12 @@ def mainLoop():
                     graphBars = graphics.rebuildGraphBars(inputList, sortIterator.indexList)
                 else:
                     sortingComplete = True
-        
         graphics.drawStatics(WIN)
+
+        textsurface = myfont.render(str(sortIterator.swapCount), True, TEXT_COLOR)
+
+        # shows text in the middle of the screen slightly offset to the left
+        WIN.blit(textsurface,(pConstants.WIDTH//2 - 10,20))
 
         for bar in graphBars:
             pygame.draw.rect(WIN, pConstants.BAR_COLOR, bar)
