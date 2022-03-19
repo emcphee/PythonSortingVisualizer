@@ -18,7 +18,9 @@ pygame.display.set_icon(icon)
 
 inputList = [x for x in range(pConstants.LISTSIZE)]
 random.shuffle(inputList)
-sortIterator = sortingLogicWrapper.sortingLogicIterator(inputList, pConstants.ALGO)
+
+sortIteratorGraph1 = sortingLogicWrapper.sortingLogicIterator(inputList, pConstants.BUBBLE)
+sortIteratorGraph2 = sortingLogicWrapper.sortingLogicIterator(inputList, pConstants.MERGE)
 
 # does a swap every 250ms
 singleSwapTimer, t = pygame.USEREVENT+1, pConstants.TIMEBETWEENSWAPS
@@ -33,7 +35,8 @@ def mainLoop():
     run = True
 
 
-    graphBars = graphics.rebuildGraphBars(inputList, sortIterator.indexList)
+    graph1Bars = graphics.rebuildGraphBars(inputList, sortIteratorGraph1.indexList,1)
+    graph2Bars = graphics.rebuildGraphBars(inputList, sortIteratorGraph2.indexList,2)
 
     while run:
         clock.tick(pConstants.FPSCAP)
@@ -41,21 +44,29 @@ def mainLoop():
             if event.type == pygame.QUIT:
                 run = False
             
-            if event.type == singleSwapTimer and not sortingComplete:
-                sortIterator.indexList = sortIterator.getNext()
-                if sortIterator.indexList != None:
-                    graphBars = graphics.rebuildGraphBars(inputList, sortIterator.indexList)
-                else:
-                    sortingComplete = True
+            if event.type == singleSwapTimer:
+                if sortIteratorGraph1.indexList != None:
+                    sortIteratorGraph1.indexList = sortIteratorGraph1.getNext()
+                if sortIteratorGraph2.indexList != None:
+                    sortIteratorGraph2.indexList = sortIteratorGraph2.getNext()
+                if sortIteratorGraph1.indexList != None:
+                    graph1Bars = graphics.rebuildGraphBars(inputList, sortIteratorGraph1.indexList,1)
+                if sortIteratorGraph2.indexList != None:
+                    graph2Bars = graphics.rebuildGraphBars(inputList, sortIteratorGraph2.indexList,2)
         graphics.drawStatics(WIN)
 
-        textsurface = myfont.render(str(sortIterator.swapCount), True, TEXT_COLOR)
+        graph1swapcount = myfont.render(str(sortIteratorGraph1.swapCount), True, pConstants.GRAPH1_COLOR)
+        graph2swapcount = myfont.render(str(sortIteratorGraph2.swapCount), True, pConstants.GRAPH2_COLOR)
 
         # shows text in the middle of the screen slightly offset to the left
-        WIN.blit(textsurface,(pConstants.WIDTH//2 - 10,20))
+        WIN.blit(graph1swapcount,(30,pConstants.HEIGHT//2))
+        WIN.blit(graph2swapcount,(pConstants.DRAWRANGEWIDTH[1] + 30,pConstants.HEIGHT//2))
 
-        for bar in graphBars:
-            pygame.draw.rect(WIN, pConstants.BAR_COLOR, bar)
+        for bar in graph1Bars:
+            pygame.draw.rect(WIN, pConstants.GRAPH1_COLOR, bar)
+        
+        for bar in graph2Bars:
+            pygame.draw.rect(WIN, pConstants.GRAPH2_COLOR, bar)
         
         pygame.display.update()
 
