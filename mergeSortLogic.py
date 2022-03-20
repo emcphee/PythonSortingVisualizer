@@ -13,7 +13,7 @@ class subList():
 
 
     def pprint(self):
-        print("splitLevel =",self.splitLevel,"Range=",self.indexRange)
+        print("splitLevel=",self.splitLevel,"Range=",self.indexRange)
 
 
 class SplitStack():
@@ -226,6 +226,11 @@ class mergeSortLogic():
         # it is called for the next placement
         self.indexList = self.mergeCache.mergeOne()
 
+        # each time a new item is merged into place, the item that was previously in that place
+        # is moved away to retain there being only 1 of each of the original list on the screen
+        # on any given frame.
+        # NOTE: this is technically not how mergeSort works at all but it gives a cleaner visual.
+        #       in reality, it doesnt do the sort in place and there is extra space that is not visualized.
         indexesChanged = [x for x in range(len(prevIndexList)) if prevIndexList[x] != self.indexList[x]]
         if len(indexesChanged) > 0:
             indexChanged = indexesChanged[0]

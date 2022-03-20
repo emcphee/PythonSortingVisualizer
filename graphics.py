@@ -38,3 +38,30 @@ def rebuildGraphBars(originList, indexList, graphNum):
         bars.append(newRect)
     
     return bars
+
+class Button:
+    def __init__(self, WIN, text,  pos, font, fillColor, buttonType):
+        self.buttonType = buttonType
+        (self.xPos, self.yPos) = pos
+        self.WIN = WIN
+        self.font = pygame.font.SysFont("Arial", font)
+        self.change_text(text, fillColor)
+ 
+    def change_text(self, text, fillColor):
+        """Change the text whe you click"""
+        self.text = self.font.render(text, True, pygame.Color("White"))
+        self.size = self.text.get_size()
+        self.surface = pygame.Surface(self.size)
+        self.surface.fill(fillColor)
+        self.surface.blit(self.text, (0, 0))
+        self.rect = pygame.Rect(self.xPos, self.yPos, self.size[0], self.size[1])
+ 
+    def show(self):
+        self.WIN.blit(self.surface, (self.xPos, self.yPos) )
+ 
+    def click(self, event):
+        x, y = pygame.mouse.get_pos()
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if pygame.mouse.get_pressed()[0]:
+                if self.rect.collidepoint(x, y):
+                    return self.buttonType
